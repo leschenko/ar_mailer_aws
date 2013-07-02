@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe ArMailerAws::Mailer do
+describe ArMailerAWS::Mailer do
 
   it 'initializer email_class option' do
-    mailer = ArMailerAws::Mailer.new(email_class: CustomEmailClass)
+    mailer = ArMailerAWS::Mailer.new(email_class: CustomEmailClass)
     mailer.email_class.name.should == 'CustomEmailClass'
   end
 
@@ -13,7 +13,7 @@ describe ArMailerAws::Mailer do
       @mail.stub(:return_path).and_return('from@example.com')
       @mail.stub(:destinations).and_return(['to@example.com'])
       @mail.stub(:encoded).and_return('email content')
-      @mailer = ArMailerAws::Mailer.new
+      @mailer = ArMailerAWS::Mailer.new
     end
 
     it '#check_params' do

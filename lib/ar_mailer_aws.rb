@@ -4,7 +4,7 @@ require 'ar_mailer_aws/mailer'
 require 'ar_mailer_aws/railtie' if defined? Rails
 
 
-module ArMailerAws
+module ArMailerAWS
 
   # ActiveRecord class for storing emails
   mattr_accessor :email_class

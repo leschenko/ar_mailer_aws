@@ -1,13 +1,13 @@
 require 'aws-sdk'
 
-module ArMailerAws
+module ArMailerAWS
   class Sender
     attr_reader :options, :model, :ses
 
     def initialize(options={})
       @options = options.is_a?(Hash) ? OpenStruct.new(options) : options
-      @model = ArMailerAws.email_class.constantize
-      @ses = AWS::SimpleEmailService.new ArMailerAws.ses_options
+      @model = ArMailerAWS.email_class.constantize
+      @ses = AWS::SimpleEmailService.new ArMailerAWS.ses_options
     end
 
     def send_batch
@@ -25,7 +25,7 @@ module ArMailerAws
           email.destroy
         rescue => e
           log "ERROR sending email #{email.id} - #{email.inspect}", :error
-          ArMailerAws.error_proc.call(email, e) if ArMailerAws.error_proc
+          ArMailerAWS.error_proc.call(email, e) if ArMailerAWS.error_proc
           email.update_column(:last_send_attempt_at, Time.now)
         end
       end
@@ -54,7 +54,7 @@ module ArMailerAws
     end
 
     def logger
-      ArMailerAws.logger
+      ArMailerAWS.logger
     end
   end
 end

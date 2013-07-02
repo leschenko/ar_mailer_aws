@@ -18,7 +18,7 @@ end
 
 #ActiveRecord::Base.logger = Logger.new(STDERR)
 
-ArMailerAws.setup do |config|
+ArMailerAWS.setup do |config|
   config.logger = Logger.new(STDERR)
 end
 

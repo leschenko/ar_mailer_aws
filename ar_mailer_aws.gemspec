@@ -5,7 +5,7 @@ require 'ar_mailer_aws/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'ar_mailer_aws'
-  spec.version       = ArMailerAws::VERSION
+  spec.version       = ArMailerAWS::VERSION
   spec.authors       = ['Alex Leschenko']
   spec.email         = %w(leschenko.al@gmail.com)
   spec.description   = %q{Daemon for sending butches of emails via Amazon Simple Email Service (Amazon SES) using ActiveRecord for storing messages}

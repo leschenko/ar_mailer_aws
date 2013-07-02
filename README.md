@@ -1,4 +1,4 @@
-# ArMailerAws
+# ArMailerAWS
 
 Daemon for sending butches of emails via Amazon Simple Email Service (Amazon SES) using ActiveRecord for storing messages
 

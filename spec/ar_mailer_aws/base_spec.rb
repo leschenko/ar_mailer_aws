@@ -1,4 +1,4 @@
 require 'spec_helper'
 
-describe ArMailerAws do
+describe ArMailerAWS do
 end
