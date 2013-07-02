@@ -36,7 +36,7 @@ module ArMailerAWS
     end
 
     def cleanup
-      return if options.max_age.zero?
+      return if options.max_age.to_i.zero?
       timeout = Time.now - options.max_age
       emails = @model.destroy_all(['last_send_attempt_at IS NOT NULL AND created_at < ?', timeout])
 

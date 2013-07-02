@@ -80,7 +80,7 @@ describe ArMailerAWS::Sender do
         end
       end
 
-      context 'error', focus: true do
+      context 'error' do
         it 'call error_proc' do
           email = create_email
           exception = StandardError.new
@@ -89,9 +89,36 @@ describe ArMailerAWS::Sender do
           @sender.ses.should_receive(:send_raw_email).and_raise(exception)
           @sender.send_emails([email])
         end
+
+        it 'update last_send_attempt_at column' do
+          email = create_email
+          exception = StandardError.new
+          @sender.ses.should_receive(:send_raw_email).and_raise(exception)
+          @sender.send_emails([email])
+          email.reload.last_send_attempt_at.should_not be_nil
+        end
+      end
+    end
+
+    describe '#send_batch', focus: true do
+      before do
+        @sender = ArMailerAWS::Sender.new
+        @sender.ses.stub(:send_raw_email)
+      end
+
+      it 'no pending emails' do
+        @sender.should_receive(:cleanup)
+        @sender.should_receive(:find_emails).and_return([])
+        @sender.should_not_receive(:send_emails)
+        @sender.send_batch
+      end
+
+      it 'no pending emails' do
+        @sender.should_receive(:find_emails).and_return([create_email])
+        @sender.should_receive(:send_emails)
+        @sender.send_batch
       end
     end
 
   end
-
 end
