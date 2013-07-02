@@ -1,6 +1,8 @@
 # ArMailerAws
 
-TODO: Write a gem description
+Daemon for sending butches of emails via Amazon Simple Email Service (Amazon SES) using ActiveRecord for storing messages
+
+
 
 ## Installation
 

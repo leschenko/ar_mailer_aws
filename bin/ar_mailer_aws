@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__) + '/../lib')
+
+require 'ar_mailer_aws'
+require 'daemons'
+
+require 'ostruct'
+require 'optparse'
+
+Daemons.run_proc('ar_mailer_aws') do
+  options = ArMailerAws.parse_options(ARGV[2..-1])
+  ArMailerAws.run(options)
+end
