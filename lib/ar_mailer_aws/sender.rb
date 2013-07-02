@@ -2,6 +2,7 @@ require 'aws-sdk'
 
 module ArMailerAws
   class Sender
+    attr_reader :options, :model, :ses
 
     def initialize(options={})
       @options = options.is_a?(Hash) ? OpenStruct.new(options) : options
@@ -10,7 +11,7 @@ module ArMailerAws
     end
 
     def find_emails
-      @model.where('last_send_attempt_at IS NULL OR last_send_attempt_at < ?', Time.now - 300).limit(@options.batch_size)
+      @model.where('last_send_attempt_at IS NULL OR last_send_attempt_at < ?', Time.now - 300).limit(options.batch_size)
     end
 
     def send_batch
@@ -35,8 +36,8 @@ module ArMailerAws
     end
 
     def cleanup
-      return if @options.max_age.zero?
-      timeout = Time.now - @options.max_age
+      return if options.max_age.zero?
+      timeout = Time.now - options.max_age
       emails = @model.destroy_all('last_send_attempt_at IS NOT NULL AND created_at < ?', timeout)
 
       log "expired #{emails.length} emails"
@@ -44,7 +45,7 @@ module ArMailerAws
 
     def log(msg, level=:info)
       formatted_msg = "[#{Time.now}] ar_mailer_aws: #{msg}"
-      puts formatted_msg if @options.verbose
+      puts formatted_msg if options.verbose
       if logger
         logger.send(level, msg)
       else

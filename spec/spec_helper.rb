@@ -25,3 +25,7 @@ end
 class BatchEmail < ActiveRecord::Base
 
 end
+
+class CustomEmailClass
+
+end

@@ -51,7 +51,7 @@ module ArMailerAws
           options.batch_size = batch_size
         end
 
-        opts.on('--delay DELAY', 'Delay between checks for new mail in the database',
+        opts.on('-d', '--delay DELAY', 'Delay between checks for new mail in the database',
                 "Default: #{options.delay}", Integer) do |delay|
           options.delay = delay
         end
@@ -65,7 +65,7 @@ module ArMailerAws
           options.rate = rate
         end
 
-        opts.on('--max-age MAX_AGE',
+        opts.on('-m', '--max-age MAX_AGE',
                 'Maxmimum age for an email. After this',
                 'it will be removed from the queue.',
                 'Set to 0 to disable queue cleanup.',
@@ -82,9 +82,9 @@ module ArMailerAws
           exit
         end
 
-        parser.parse!(args)
-        options
-      end
+      end.parse!(args)
+
+      options
     end
 
   end

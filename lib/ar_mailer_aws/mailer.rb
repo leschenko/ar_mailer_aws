@@ -3,7 +3,7 @@ module ArMailerAws
 
     attr_accessor :email_class
 
-    def initialize(options)
+    def initialize(options={})
       self.email_class = options[:email_class] || ArMailerAws.email_class.constantize
     end
 
