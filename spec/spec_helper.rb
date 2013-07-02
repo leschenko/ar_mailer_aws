@@ -16,6 +16,12 @@ ActiveRecord::Schema.define(:version => 1) do
   end
 end
 
+#ActiveRecord::Base.logger = Logger.new(STDERR)
+
+ArMailerAws.setup do |config|
+  config.logger = Logger.new(STDERR)
+end
+
 class BatchEmail < ActiveRecord::Base
 
 end

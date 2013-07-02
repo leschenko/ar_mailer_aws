@@ -12,6 +12,7 @@ module ArMailerAws
 
   # options to AWS::SimpleEmailService initializer
   mattr_accessor :ses_options
+  @@ses_options = {}
 
   # ar_mailer_aws logger
   mattr_accessor :logger

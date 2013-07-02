@@ -4,13 +4,13 @@ module ArMailerAws
   class Sender
 
     def initialize(options={})
-      @options = options
+      @options = options.is_a?(Hash) ? OpenStruct.new(options) : options
       @model = ArMailerAws.email_class.constantize
       @ses = AWS::SimpleEmailService.new ArMailerAws.ses_options
     end
 
     def find_emails
-      @model.where('last_send_attempt_at < ?', Time.now - 300).limit(@options.batch_size)
+      @model.where('last_send_attempt_at IS NULL OR last_send_attempt_at < ?', Time.now - 300).limit(@options.batch_size)
     end
 
     def send_batch
