@@ -10,10 +10,6 @@ module ArMailerAws
       @ses = AWS::SimpleEmailService.new ArMailerAws.ses_options
     end
 
-    def find_emails
-      @model.where('last_send_attempt_at IS NULL OR last_send_attempt_at < ?', Time.now - 300).limit(options.batch_size)
-    end
-
     def send_batch
       cleanup
       emails = find_emails
@@ -35,10 +31,14 @@ module ArMailerAws
       end
     end
 
+    def find_emails
+      @model.where('last_send_attempt_at IS NULL OR last_send_attempt_at < ?', Time.now - 300).limit(options.batch_size)
+    end
+
     def cleanup
       return if options.max_age.zero?
       timeout = Time.now - options.max_age
-      emails = @model.destroy_all('last_send_attempt_at IS NOT NULL AND created_at < ?', timeout)
+      emails = @model.destroy_all(['last_send_attempt_at IS NOT NULL AND created_at < ?', timeout])
 
       log "expired #{emails.length} emails"
     end
@@ -49,7 +49,7 @@ module ArMailerAws
       if logger
         logger.send(level, msg)
       else
-        Rails.logger.send(level, formatted_msg) if defined? Rails
+        Rails.logger.send(level, formatted_msg) if options.verbose && defined? Rails
       end
     end
 
