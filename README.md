@@ -4,6 +4,7 @@ Daemon for sending butches of emails via Amazon Simple Email Service (Amazon SES
 ArMailerAWS handles daily quotas, maximum number of emails send per second (max send rate),
 batch email sending, expiring undelivered emails.
 
+[![Build Status](https://travis-ci.org/leschenko/ar_mailer_aws.png?branch=master)](https://travis-ci.org/leschenko/ar_mailer_aws)
 
 ## Installation
 
