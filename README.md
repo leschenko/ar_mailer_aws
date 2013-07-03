@@ -1,6 +1,8 @@
 # ArMailerAWS
 
-Daemon for sending butches of emails via Amazon Simple Email Service (Amazon SES) using ActiveRecord for storing messages
+Daemon for sending butches of emails via Amazon Simple Email Service (Amazon SES) using ActiveRecord for storing messages.
+ArMailerAWS handles daily quotas, maximum number of emails send per second (max send rate),
+batch email sending, expiring undelivered emails.
 
 
 ## Installation

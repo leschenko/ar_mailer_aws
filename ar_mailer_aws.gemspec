@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = ArMailerAWS::VERSION
   spec.authors       = ['Alex Leschenko']
   spec.email         = %w(leschenko.al@gmail.com)
-  spec.description   = %q{Daemon for sending butches of emails via Amazon Simple Email Service (Amazon SES) using ActiveRecord for storing messages}
+  spec.description   = %q{Daemon for sending butches of emails via Amazon SES using ActiveRecord for storing messages. Handles daily quotas, max send rate.}
   spec.summary       = %q{Send butches of emails via Amazon SES}
   spec.homepage       = 'https://github.com/leschenko/ar_mailer_aws'
   spec.license       = 'MIT'
