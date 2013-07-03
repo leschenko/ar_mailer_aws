@@ -104,9 +104,9 @@ describe ArMailerAWS::Sender do
         it 'call not more the rate times per second' do
           5.times { create_email }
           @sender.options.rate = 2
+          @sender.ses.should_receive(:send_raw_email).twice
           begin
             Timeout::timeout(1) do
-              @sender.ses.should_receive(:send_raw_email).twice
               @sender.send_emails(@sender.model.all)
             end
           rescue Timeout::Error

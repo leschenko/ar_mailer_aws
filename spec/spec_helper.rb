@@ -19,13 +19,11 @@ end
 #ActiveRecord::Base.logger = Logger.new(STDERR)
 
 ArMailerAWS.setup do |config|
-  config.logger = Logger.new(STDERR)
+  #config.logger = Logger.new(STDERR)
 end
 
 class BatchEmail < ActiveRecord::Base
-
 end
 
 class CustomEmailClass
-
 end

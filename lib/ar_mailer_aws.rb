@@ -30,7 +30,7 @@ module ArMailerAWS
       sender = Sender.new(options)
       loop do
         sender.send_batch
-        sleep options.delay
+        sleep sender.options.delay
       end
     end
 
