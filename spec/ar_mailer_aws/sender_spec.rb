@@ -61,8 +61,9 @@ describe ArMailerAWS::Sender do
 
     describe '#send_emails' do
       before do
-        @sender = ArMailerAWS::Sender.new
+        @sender = ArMailerAWS::Sender.new(quota: 100)
         @sender.ses.stub(:send_raw_email)
+        @sender.ses.stub(:quotas).and_return({sent_last_24_hours: 0})
       end
 
       context 'success' do
@@ -113,10 +114,9 @@ describe ArMailerAWS::Sender do
         end
       end
 
-      context 'quota', focus: true do
+      context 'quota' do
         it 'not exceed quota' do
           10.times { create_email }
-          @sender.ses.stub(:quotas).and_return({sent_last_24_hours: 0})
           @sender.options.quota = 5
           expect {
             @sender.send_emails(@sender.model.all)
@@ -134,7 +134,7 @@ describe ArMailerAWS::Sender do
       end
     end
 
-    describe '#send_batch', focus: true do
+    describe '#send_batch' do
       before do
         @sender = ArMailerAWS::Sender.new
         @sender.ses.stub(:send_raw_email)

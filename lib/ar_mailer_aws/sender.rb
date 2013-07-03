@@ -38,7 +38,7 @@ module ArMailerAWS
           email.destroy
           @sent_count += 1
         rescue => e
-          log "ERROR sending email #{email.id} - #{email.inspect}", :error
+          log "ERROR sending email #{email.id} - #{email.inspect}: #{e.message}\n   #{e.backtrace.join("\n   ")}", :error
           ArMailerAWS.error_proc.call(email, e) if ArMailerAWS.error_proc
           email.update_column(:last_send_attempt_at, Time.now)
         end
