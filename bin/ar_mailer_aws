@@ -8,7 +8,25 @@ require 'daemons'
 require 'ostruct'
 require 'optparse'
 
+# require Rails environment expect running tests
+name = File.basename $0
+unless name == 'rspec'
+  begin
+    require Dir.pwd + '/config/environment'
+    ActiveRecord::Base.connection.disconnect!
+  rescue LoadError
+    <<-EOF
+      #{name} must be run from a Rails application's root to deliver email.
+      #{Dir.pwd} does not appear to be a Rails application root.
+    EOF
+  end
+end
+
 Daemons.run_proc('ar_mailer_aws') do
-  options = ArMailerAWS.parse_options(ARGV[2..-1])
+  options = ArMailerAWS.parse_options(ARGV[2..-1] || [])
+  if defined? Rails
+    ActiveRecord::Base.establish_connection
+    ActiveRecord::Base.logger = Rails.logger = ActiveSupport::BufferedLogger.new(Rails.root.join("log/#{Rails.env}.log"))
+  end
   ArMailerAWS.run(options)
 end

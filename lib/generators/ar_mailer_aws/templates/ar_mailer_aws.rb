@@ -6,3 +6,5 @@ AWS.config(
 <% if class_name != 'BatchEmail' -%>
 ArMailerAWS.email_class = '<%= class_name %>'
 <% end -%>
+
+#ActionMailer::Base.delivery_method = :ar_mailer_ses

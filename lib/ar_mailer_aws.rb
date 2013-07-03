@@ -2,7 +2,7 @@ require 'ar_mailer_aws/version'
 require 'ar_mailer_aws/sender'
 require 'ar_mailer_aws/mailer'
 require 'ar_mailer_aws/railtie' if defined? Rails
-
+require 'active_support/core_ext'
 
 module ArMailerAWS
 

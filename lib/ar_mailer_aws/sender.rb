@@ -80,8 +80,8 @@ module ArMailerAWS
       puts formatted_msg if options.verbose
       if logger
         logger.send(level, msg)
-      else
-        Rails.logger.send(level, formatted_msg) if options.verbose && defined? Rails
+      elsif options.verbose && defined? Rails
+        Rails.logger.send(level, formatted_msg)
       end
     end
 
