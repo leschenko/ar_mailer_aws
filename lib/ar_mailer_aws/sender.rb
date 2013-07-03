@@ -8,6 +8,8 @@ module ArMailerAWS
       @options = options.is_a?(Hash) ? OpenStruct.new(options) : options
       @model = ArMailerAWS.email_class.constantize
       @ses = AWS::SimpleEmailService.new ArMailerAWS.ses_options
+      @day = Date.today
+      @sent_count = 0
     end
 
     def send_batch
@@ -18,16 +20,46 @@ module ArMailerAWS
     end
 
     def send_emails(emails)
+      sent_per_second = 0
       emails.each do |email|
-        log "send email to #{email.to}"
+        if exceed_quota?
+          log "exceed daily quota in #{@quota}, sent by mailer #{@sent_count}, other #{@sent_last_24_hours}"
+          return
+        end
         begin
+          if sent_per_second == options.rate
+            sleep 1
+            sent_per_second = 0
+          else
+            sent_per_second += 1
+          end
+          log "send email to #{email.to}"
           @ses.send_raw_email email.mail, from: email.from, to: email.to
           email.destroy
+          @sent_count += 1
         rescue => e
           log "ERROR sending email #{email.id} - #{email.inspect}", :error
           ArMailerAWS.error_proc.call(email, e) if ArMailerAWS.error_proc
           email.update_column(:last_send_attempt_at, Time.now)
         end
+      end
+    end
+
+    def exceed_quota?
+      if @day == Date.today
+        options.quota <= @sent_count + sent_last_24_hours
+      else
+        @sent_count = 0
+        @sent_last_24_hours = nil
+        false
+      end
+    end
+
+    def sent_last_24_hours
+      @sent_last_24_hours ||= begin
+        count = @ses.quotas[:sent_last_24_hours]
+        log "#{count} emails sent last 24 hours"
+        count
       end
     end
 
