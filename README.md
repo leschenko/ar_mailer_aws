@@ -13,10 +13,6 @@ And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install ar_mailer_aws
-
 Run generator:
 
     $ rails g ar_mailer_aws BatchEmail
@@ -25,23 +21,31 @@ Run migrations:
 
     $ rake db:migrate
 
+Or install it yourself as:
+
+    $ gem install ar_mailer_aws
+
 ## Usage
 
-Edit config/initializer/ar_mailer_aws.rb and uncomment below line to use ar_mailer as default delivery method:
+To use `ar_mailer_aws` as default delivery method edit `config/initializer/ar_mailer_aws.rb` and uncomment below line:
 
+```ruby
   ActionMailer::Base.delivery_method = :ar_mailer_aws
+```
 
-Or if you need to, you can set each mailer class delivery method individually:
+If you need `ar_mailer_aws` delivery method in particular mailer:
 
+```ruby
   class MyMailer < ActionMailer::Base
     self.delivery_method = :ar_mailer_aws
   end
+```
 
 Run delivery daemon:
 
     $ bundle exec ar_mailer_aws start
 
-To list available options:
+List available options:
 
     $ bundle exec ar_mailer_aws --help
 
