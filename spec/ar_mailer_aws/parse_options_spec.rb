@@ -33,4 +33,8 @@ describe 'command line options parsing' do
   it 'verbose' do
     ArMailerAWS.parse_options(%w(-v)).verbose.should be_true
   end
+
+  it 'pid_dir' do
+    ArMailerAWS.parse_options(%w(-p tmp/pids)).pid_dir.should == 'tmp/pids'
+  end
 end

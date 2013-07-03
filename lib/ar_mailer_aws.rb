@@ -95,6 +95,11 @@ module ArMailerAWS
           options.max_age = max_age
         end
 
+        opts.on('-p', '--pid-dir DIRECTORY', 'Directory for storing pid file',
+                'Default: Stored in current directory (named `ar_mailer_aws.pid`)') do |pid_dir|
+          options.pid_dir = pid_dir
+        end
+
         opts.on('-v', '--[no-]verbose', 'Run verbosely') do |v|
           options.verbose = v
         end
