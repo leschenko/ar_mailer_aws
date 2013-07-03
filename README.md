@@ -42,6 +42,10 @@ Run delivery daemon:
 
     $ bundle exec ar_mailer_aws start
 
+To list available options:
+
+    $ bundle exec ar_mailer_aws --help
+
 
 ## Contributing
 
