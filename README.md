@@ -3,7 +3,6 @@
 Daemon for sending butches of emails via Amazon Simple Email Service (Amazon SES) using ActiveRecord for storing messages
 
 
-
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -30,12 +29,12 @@ Run migrations:
 
 Edit config/initializer/ar_mailer_aws.rb and uncomment below line to use ar_mailer as default delivery method:
 
-  ActionMailer::Base.delivery_method = :ar_mailer_ses
+  ActionMailer::Base.delivery_method = :ar_mailer_aws
 
 Or if you need to, you can set each mailer class delivery method individually:
 
   class MyMailer < ActionMailer::Base
-    self.delivery_method = :ar_mailer_ses
+    self.delivery_method = :ar_mailer_aws
   end
 
 Run delivery daemon:

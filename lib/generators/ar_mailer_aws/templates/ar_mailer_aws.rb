@@ -7,4 +7,4 @@ AWS.config(
 ArMailerAWS.email_class = '<%= class_name %>'
 <% end -%>
 
-#ActionMailer::Base.delivery_method = :ar_mailer_ses
+#ActionMailer::Base.delivery_method = :ar_mailer_aws

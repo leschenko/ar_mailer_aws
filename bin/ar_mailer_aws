@@ -26,7 +26,7 @@ options = ArMailerAWS.parse_options(ARGV)
 Daemons.run_proc('ar_mailer_aws') do
   if defined? Rails
     ActiveRecord::Base.establish_connection
-    ActiveRecord::Base.logger = Rails.logger = ActiveSupport::BufferedLogger.new(Rails.root.join("log/#{Rails.env}.log"))
+    Rails.logger = ActiveRecord::Base.logger = ActionMailer::Base.logger = ActiveSupport::BufferedLogger.new(Rails.root.join("log/#{Rails.env}.log"))
   end
   ArMailerAWS.run(options)
 end

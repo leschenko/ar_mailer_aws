@@ -18,9 +18,9 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = %w(lib)
 
-  spec.add_dependency 'activesupport', '>= 3.0'
   spec.add_dependency 'daemons', '~> 1.1.9'
   spec.add_dependency 'aws-sdk', '~> 1.0'
+  spec.add_dependency 'activesupport', '>= 3.0'
 
   spec.add_development_dependency 'bundler', '~> 1.3'
   spec.add_development_dependency 'rake'
