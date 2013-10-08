@@ -1,5 +1,3 @@
-require 'aws-sdk'
-
 module ArMailerAWS
   class Sender
     attr_reader :options, :model, :ses
