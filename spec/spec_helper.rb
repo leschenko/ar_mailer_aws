@@ -1,5 +1,6 @@
 require 'active_record'
 require 'active_support/core_ext'
+require 'aws-sdk'
 require 'ar_mailer_aws'
 require 'forgery'
 
