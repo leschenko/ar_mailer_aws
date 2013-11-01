@@ -9,7 +9,7 @@ describe ArMailerAWS::Mailer do
 
   context 'delivering' do
     before do
-      @mail = stub('Mail')
+      @mail = double('Mail')
       @mail.stub(:return_path).and_return('from@example.com')
       @mail.stub(:destinations).and_return(['to@example.com'])
       @mail.stub(:encoded).and_return('email content')
