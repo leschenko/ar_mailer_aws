@@ -17,7 +17,7 @@ describe ArMailerAWS do
     it 'run sender' do
       @sender.should_receive(:send_batch).twice
       begin
-        Timeout::timeout(2) do
+        Timeout::timeout(1.5) do
           ArMailerAWS.run({})
         end
       rescue Timeout::Error
