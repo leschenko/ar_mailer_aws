@@ -18,7 +18,7 @@ module ArMailerAWS
   mattr_accessor :logger
 
   # error proc called when error occurred during delivering an email
-  # Example: lambda { |email, exception| ExceptionNotifier::Notifier.background_exception_notification(exception, data: {email: email.attributes}).deliver }
+  # Example: lambda { |email, exception| ExceptionNotifier.notify_exception(exception, data: {email: email.attributes}) }
   mattr_accessor :error_proc
 
   class << self
