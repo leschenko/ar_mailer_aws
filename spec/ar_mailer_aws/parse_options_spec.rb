@@ -37,4 +37,8 @@ describe 'command line options parsing' do
   it 'pid_dir' do
     ArMailerAWS.parse_options(%w(-p tmp/pids)).pid_dir.should == 'tmp/pids'
   end
+
+  it 'app_name' do
+    ArMailerAWS.parse_options(%w(--app-name my_daemon)).app_name.should == 'my_daemon'
+  end
 end

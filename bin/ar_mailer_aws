@@ -23,10 +23,10 @@ unless name == 'rspec'
 end
 
 options = ArMailerAWS.parse_options(ARGV)
-daemon_options = {multiple: true}
+daemon_options = {}
 daemon_options.update(dir_mode: :normal, dir: options.pid_dir) if options.pid_dir
 
-Daemons.run_proc('ar_mailer_aws', daemon_options) do
+Daemons.run_proc(options.app_name || 'ar_mailer_aws', daemon_options) do
   # handle log files
   if defined? Rails
     ActiveRecord::Base.establish_connection

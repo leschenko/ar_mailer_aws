@@ -100,6 +100,11 @@ module ArMailerAWS
           options.pid_dir = pid_dir
         end
 
+        opts.on('--app-name APP_NAME', 'Name for the daemon app',
+                'Default: ar_mailer_aws') do |app_name|
+          options.app_name = app_name
+        end
+
         opts.on('-v', '--[no-]verbose', 'Run verbosely') do |v|
           options.verbose = v
         end
