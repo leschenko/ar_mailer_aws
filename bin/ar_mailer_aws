@@ -23,11 +23,23 @@ unless name == 'rspec'
 end
 
 options = ArMailerAWS.parse_options(ARGV)
-daemon_options = options.pid_dir ? {dir_mode: :normal, dir: options.pid_dir} : {}
+daemon_options = {multiple: true}
+daemon_options.update(dir_mode: :normal, dir: options.pid_dir) if options.pid_dir
+
 Daemons.run_proc('ar_mailer_aws', daemon_options) do
+  # handle log files
   if defined? Rails
     ActiveRecord::Base.establish_connection
-    Rails.logger = ActiveRecord::Base.logger = ActionMailer::Base.logger = ActiveSupport::BufferedLogger.new(Rails.root.join("log/#{Rails.env}.log"))
+    logger = ActiveSupport::BufferedLogger.new(Rails.root.join("log/#{Rails.env}.log"))
+    ActiveRecord::Base.logger = logger unless Rails.env.production?
+    Rails.logger = ActionMailer::Base.logger = logger
   end
+  if ArMailerAWS.logger.respond_to?(:reopen)
+    ArMailerAWS.logger.reopen
+    ArMailerAWS.logger.info 'Started daemon'
+  end
+  AWS.config.logger.reopen if AWS.config.logger.respond_to?(:reopen)
+
+  # run mailer
   ArMailerAWS.run(options)
 end
