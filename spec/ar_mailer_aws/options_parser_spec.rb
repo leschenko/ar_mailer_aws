@@ -3,7 +3,7 @@ require 'spec_helper'
 describe ArMailerAWS::OptionsParser do
 
   it 'return defaults if no options specified' do
-    options = ArMailerAWS.parse_options([])
+    options = ArMailerAWS::OptionsParser.parse_options([])
     options.batch_size.should == 100
     options.delay.should == 180
     options.quota.should == 10_000
@@ -12,35 +12,35 @@ describe ArMailerAWS::OptionsParser do
   end
 
   it 'batch_size' do
-    ArMailerAWS.parse_options(%w(-b 10)).batch_size.should == 10
+    ArMailerAWS::OptionsParser.parse_options(%w(-b 10)).batch_size.should == 10
   end
 
   it 'delay' do
-    ArMailerAWS.parse_options(%w(-d 90)).delay.should == 90
+    ArMailerAWS::OptionsParser.parse_options(%w(-d 90)).delay.should == 90
   end
 
   it 'quota' do
-    ArMailerAWS.parse_options(%w(-q 100)).quota.should == 100
+    ArMailerAWS::OptionsParser.parse_options(%w(-q 100)).quota.should == 100
   end
 
   it 'rate' do
-    ArMailerAWS.parse_options(%w(-r 7)).rate.should == 7
+    ArMailerAWS::OptionsParser.parse_options(%w(-r 7)).rate.should == 7
   end
 
   it 'max_age' do
-    ArMailerAWS.parse_options(%w(-m 300)).max_age.should == 300
+    ArMailerAWS::OptionsParser.parse_options(%w(-m 300)).max_age.should == 300
   end
 
   it 'verbose' do
-    ArMailerAWS.parse_options(%w(-v)).verbose.should be_true
+    ArMailerAWS::OptionsParser.parse_options(%w(-v)).verbose.should be_true
   end
 
   it 'pid_dir' do
-    ArMailerAWS.parse_options(%w(-p tmp/pids)).pid_dir.should == 'tmp/pids'
+    ArMailerAWS::OptionsParser.parse_options(%w(-p tmp/pids)).pid_dir.should == 'tmp/pids'
   end
 
   it 'app_name' do
-    ArMailerAWS.parse_options(%w(--app-name my_daemon)).app_name.should == 'my_daemon'
+    ArMailerAWS::OptionsParser.parse_options(%w(--app-name my_daemon)).app_name.should == 'my_daemon'
   end
 
 end

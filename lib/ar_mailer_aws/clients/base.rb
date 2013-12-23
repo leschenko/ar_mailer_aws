@@ -1,7 +1,11 @@
 module ArMailerAWS
   module Clients
+
+    autoload :SMTP, 'ar_mailer_aws/clients/smtp'
+    autoload :AmazonSES, 'ar_mailer_aws/clients/amazon_ses'
+
     class Base
-      attr_reader :options, :model, :client
+      attr_reader :options, :model, :service
 
       def initialize(options={})
         @options = options.is_a?(Hash) ? OpenStruct.new(options) : options
@@ -22,6 +26,18 @@ module ArMailerAWS
         raise NotImplementedError
       end
 
+      def find_emails
+        @model.where('last_send_attempt_at IS NULL OR last_send_attempt_at < ?', Time.now - 300).limit(options.batch_size)
+      end
+
+      def cleanup
+        return if options.max_age.to_i.zero?
+        timeout = Time.now - options.max_age
+        emails = @model.destroy_all(['last_send_attempt_at IS NOT NULL AND created_at < ?', timeout])
+
+        log "expired #{emails.length} emails"
+      end
+
       private
 
       def check_rate
@@ -33,7 +49,7 @@ module ArMailerAWS
         end
       end
 
-      def handle_error(e)
+      def handle_error(e, email)
         log "ERROR sending email #{email.id} - #{email.inspect}: #{e.message}\n   #{e.backtrace.join("\n   ")}", :error
         ArMailerAWS.error_proc.call(email, e) if ArMailerAWS.error_proc
         email.update_column(:last_send_attempt_at, Time.now)
@@ -53,22 +69,10 @@ module ArMailerAWS
 
       def sent_last_24_hours
         @sent_last_24_hours ||= begin
-          count = @client.quotas[:sent_last_24_hours]
+          count = @service.quotas[:sent_last_24_hours]
           log "#{count} emails sent last 24 hours"
           count
         end
-      end
-
-      def find_emails
-        @model.where('last_send_attempt_at IS NULL OR last_send_attempt_at < ?', Time.now - 300).limit(options.batch_size)
-      end
-
-      def cleanup
-        return if options.max_age.to_i.zero?
-        timeout = Time.now - options.max_age
-        emails = @model.destroy_all(['last_send_attempt_at IS NOT NULL AND created_at < ?', timeout])
-
-        log "expired #{emails.length} emails"
       end
 
       def log(msg, level=:info)
@@ -76,7 +80,7 @@ module ArMailerAWS
         puts formatted_msg if options.verbose
         if logger
           logger.send(level, msg)
-        elsif options.verbose && defined? Rails
+        elsif options.verbose && Object.const_defined?('Rails')
           Rails.logger.send(level, formatted_msg)
         end
       end
