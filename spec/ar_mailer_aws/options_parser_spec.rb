@@ -1,6 +1,7 @@
 require 'spec_helper'
 
-describe 'command line options parsing' do
+describe ArMailerAWS::OptionsParser do
+
   it 'return defaults if no options specified' do
     options = ArMailerAWS.parse_options([])
     options.batch_size.should == 100
@@ -41,4 +42,5 @@ describe 'command line options parsing' do
   it 'app_name' do
     ArMailerAWS.parse_options(%w(--app-name my_daemon)).app_name.should == 'my_daemon'
   end
+
 end

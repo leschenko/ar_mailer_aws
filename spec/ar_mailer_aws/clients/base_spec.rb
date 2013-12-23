@@ -16,7 +16,7 @@ describe ArMailerAWS::Sender do
   end
 
   it 'supply ses options to AWS::SimpleEmailService initializer' do
-    ArMailerAWS.ses_options = {a: 1}
+    ArMailerAWS.client_config = {a: 1}
     AWS::SimpleEmailService.should_receive(:new).with({a: 1})
     ArMailerAWS::Sender.new
   end

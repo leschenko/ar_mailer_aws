@@ -5,7 +5,7 @@ module ArMailerAWS
     def initialize(options={})
       @options = options.is_a?(Hash) ? OpenStruct.new(options) : options
       @model = ArMailerAWS.email_class.constantize
-      @ses = AWS::SimpleEmailService.new ArMailerAWS.ses_options
+      @ses = AWS::SimpleEmailService.new ArMailerAWS.client_config
       @day = Date.today
       @sent_count = 0
     end

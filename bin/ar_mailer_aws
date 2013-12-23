@@ -22,7 +22,7 @@ unless name == 'rspec'
   end
 end
 
-options = ArMailerAWS.parse_options(ARGV)
+options = ArMailerAWS::OptionsParser.parse_options(ARGV)
 daemon_options = {}
 daemon_options.update(dir_mode: :normal, dir: options.pid_dir) if options.pid_dir
 
