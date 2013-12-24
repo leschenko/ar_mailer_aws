@@ -19,9 +19,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = %w(lib)
 
   spec.add_dependency 'daemons', '~> 1.1.9'
-  spec.add_dependency 'aws-sdk', '~> 1.0'
   spec.add_dependency 'activesupport', '>= 3.0'
 
+  spec.add_development_dependency 'aws-sdk', '~> 1.0'
   spec.add_development_dependency 'mandrill-api', '~> 1.0.49'
   spec.add_development_dependency 'mail', '~> 2.5.4'
 

@@ -10,8 +10,7 @@ module ArMailerAWS
 
       def initialize(options={})
         super
-        raise('Missing Mandrill api key') unless  ArMailerAWS.client_config[:mandrill].try(:fetch, :key)
-        @service = ::Mandrill::API.new ArMailerAWS.client_config[:mandrill][:key]
+        @service = ::Mandrill::API.new settings[:key]
       end
 
       def send_emails(emails)

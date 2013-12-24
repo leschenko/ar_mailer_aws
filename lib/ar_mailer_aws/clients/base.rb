@@ -16,6 +16,13 @@ module ArMailerAWS
         @sent_per_second = 0
       end
 
+      def settings
+        @settings ||= begin
+          config_key = self.class.name.split('::').last.underscore.to_sym
+          ArMailerAWS.client_config[config_key] or raise("Provide setting via `ArMailerAWS.client_config[:#{config_key}]`")
+        end
+      end
+
       def send_batch
         cleanup
         emails = find_emails
@@ -57,6 +64,7 @@ module ArMailerAWS
       end
 
       def exceed_quota?
+        return false unless options.quota
         if @day == Date.today
           is_exceed_quota = options.quota <= @sent_count + sent_last_24_hours
           log("exceed daily quota in #{@quota}, sent #{@sent_count} (total #{@sent_last_24_hours})") if is_exceed_quota

@@ -1,14 +1,17 @@
+# too early require aws-sdk breaks mailer, need to be required by rails app
+#require 'aws-sdk'
+
 module ArMailerAWS
   module Clients
     class AmazonSES < Base
 
       def initialize(options={})
         super
-        if ArMailerAWS.ses_options && !ArMailerAWS.client_config[:amazon_ses]
+        if ArMailerAWS.ses_options && settings.blank?
           ActiveSupport::Deprecation.warn('`ArMailerAWS.ses_options` is deprecated, use `ArMailerAWS.client_config[:amazon_ses]` instead')
-          ArMailerAWS.client_config[:amazon_ses] = ArMailerAWS.ses_options
+          @settings = ArMailerAWS.client_config[:amazon_ses] = ArMailerAWS.ses_options
         end
-        @service = AWS::SimpleEmailService.new ArMailerAWS.client_config[:amazon_ses]
+        @service = AWS::SimpleEmailService.new settings
       end
 
       def send_emails(emails)
