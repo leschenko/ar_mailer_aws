@@ -59,7 +59,7 @@ module ArMailerAWS
       def exceed_quota?
         if @day == Date.today
           is_exceed_quota = options.quota <= @sent_count + sent_last_24_hours
-          log("exceed daily quota in #{@quota}, sent #{@sent_count} (total #{@sent_last_24_hours})") unless is_exceed_quota
+          log("exceed daily quota in #{@quota}, sent #{@sent_count} (total #{@sent_last_24_hours})") if is_exceed_quota
           is_exceed_quota
         else
           @sent_count = 0
