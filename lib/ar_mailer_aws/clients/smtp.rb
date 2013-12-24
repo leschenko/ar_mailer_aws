@@ -26,7 +26,7 @@ module ArMailerAWS
 
       def send_email(smtp, email)
         log "send email to #{email.to}"
-        log smtp.send_message(email.mail, email.from, email.to)
+        client_log smtp.send_message(email.mail, email.from, email.to)
         email.destroy
         @sent_count += 1
       end
