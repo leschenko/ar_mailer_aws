@@ -20,7 +20,7 @@ module ArMailerAWS
             check_rate
             send_email(email)
           rescue => e
-            handle_error(e, email)
+            handle_email_error(e, email)
           end
         end
       end

@@ -7,15 +7,20 @@ module ArMailerAWS
       def send_emails(emails)
         session = Net::SMTP.new(settings[:address], settings[:port])
         session.enable_starttls_auto if settings[:enable_starttls_auto]
-        session.start(settings[:domain], settings[:user_name], settings[:password], settings[:authentication]) do |smtp|
-          emails.each do |email|
-            begin
-              break if exceed_quota?
-              send_email(smtp, email)
-            rescue => e
-              handle_error(e, email)
+        begin
+          session.start(settings[:domain], settings[:user_name], settings[:password], settings[:authentication]) do |smtp|
+            emails.each do |email|
+              begin
+                break if exceed_quota?
+                send_email(smtp, email)
+              rescue => e
+                handle_email_error(e, email)
+              end
             end
           end
+        rescue => e
+          log "ERROR in SMTP session: #{e.message}\n   #{e.backtrace.join("\n   ")}", :error
+          ArMailerAWS.error_proc.call(email, e) if ArMailerAWS.error_proc
         end
       end
 

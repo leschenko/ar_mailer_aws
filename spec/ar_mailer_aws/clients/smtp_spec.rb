@@ -30,6 +30,7 @@ describe ArMailerAWS::Clients::SMTP do
       Net::SMTP.stub(:new).and_return(session)
       session.stub(:start).and_yield(session)
       session.should_receive(:send_message).with('mail', 'from', 'to')
+      email.should_receive(:destroy)
       @client.send_emails([email])
     end
   end
