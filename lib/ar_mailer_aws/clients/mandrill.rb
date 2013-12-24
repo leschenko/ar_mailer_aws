@@ -40,10 +40,12 @@ module ArMailerAWS
         mail = Mail.new(email.mail)
         headers = mail.header.reject{|h| REJECT_HEADERS.include?(h.name) }.map { |h| [h.name, h.value] }.to_hash
         {
-            'subject' => mail.subject,
-            'html' => mail.body.encoded,
+            'subject' => mail.subject.to_s.force_encoding('UTF-8'),
+            'html' => mail.body.to_s.force_encoding('UTF-8'),
             'headers' => headers,
             'from_email' => email.from,
+            'track_opens' => false,
+            'track_clicks' => false,
             'to' => [{'email' => email.to, 'type' => 'to'}]
         }
       end
