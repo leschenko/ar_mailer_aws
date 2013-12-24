@@ -18,12 +18,16 @@ module ArMailerAWS
   mattr_accessor :available_clients
   @@available_clients = {
       amazon_ses: 'ArMailerAWS::Clients::AmazonSES',
-      smtp: 'ArMailerAWS::Clients::SMTP'
+      smtp: 'ArMailerAWS::Clients::SMTP',
+      mandrill: 'ArMailerAWS::Clients::Mandrill'
   }
 
   # mailer client credentials
   mattr_accessor :client_config
   @@client_config = {}
+
+  # mailer client logger
+  mattr_accessor :client_logger
 
   # DEPRECATED
   # options to AWS::SimpleEmailService initializer

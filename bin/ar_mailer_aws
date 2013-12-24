@@ -38,7 +38,7 @@ Daemons.run_proc(options.app_name || 'ar_mailer_aws', daemon_options) do
     ArMailerAWS.logger.reopen
     ArMailerAWS.logger.info 'Started daemon'
   end
-  AWS.config.logger.reopen if AWS.config.logger.respond_to?(:reopen)
+  ArMailerAWS.client_logger.reopen if ArMailerAWS.client_logger.respond_to?(:reopen)
 
   # run mailer
   ArMailerAWS.run(options)

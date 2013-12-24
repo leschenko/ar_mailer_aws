@@ -30,6 +30,14 @@ module ArMailerAWS
         @sent_count += 1
       end
 
+      def sent_last_24_hours
+        @sent_last_24_hours ||= begin
+          count = @service.quotas[:sent_last_24_hours]
+          log "#{count} emails sent last 24 hours"
+          count
+        end
+      end
+
     end
   end
 end

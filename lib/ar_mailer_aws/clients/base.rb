@@ -3,6 +3,7 @@ module ArMailerAWS
 
     autoload :SMTP, 'ar_mailer_aws/clients/smtp'
     autoload :AmazonSES, 'ar_mailer_aws/clients/amazon_ses'
+    autoload :Mandrill, 'ar_mailer_aws/clients/mandrill'
 
     class Base
       attr_reader :options, :model, :service
@@ -68,15 +69,11 @@ module ArMailerAWS
       end
 
       def sent_last_24_hours
-        @sent_last_24_hours ||= begin
-          count = @service.quotas[:sent_last_24_hours]
-          log "#{count} emails sent last 24 hours"
-          count
-        end
+        0
       end
 
       def log(msg, level=:info)
-        formatted_msg = "[#{Time.now}] ar_mailer_aws: #{msg}"
+        formatted_msg = "[#{Time.now}] batch_mailer: #{msg}"
         puts formatted_msg if options.verbose
         if logger
           logger.send(level, msg)
@@ -87,6 +84,20 @@ module ArMailerAWS
 
       def logger
         ArMailerAWS.logger
+      end
+
+      def client_log(msg, level=:info)
+        formatted_msg = "[#{Time.now}] batch_mailer_client: #{msg}"
+        puts formatted_msg if options.verbose
+        if client_logger
+          client_logger.send(level, msg)
+        elsif options.verbose && Object.const_defined?('Rails')
+          Rails.logger.send(level, formatted_msg)
+        end
+      end
+
+      def client_logger
+        ArMailerAWS.client_logger
       end
     end
   end
