@@ -7,6 +7,9 @@ module ArMailerAWS
 
       def initialize(options={})
         super
+        if ArMailerAWS.client_config[:amazon_ses].blank? && ArMailerAWS.client == :amazon_ses
+          ArMailerAWS.client_config[:amazon_ses] = AWS.config.to_h
+        end
         if ArMailerAWS.ses_options && settings.blank?
           ActiveSupport::Deprecation.warn('`ArMailerAWS.ses_options` is deprecated, use `ArMailerAWS.client_config[:amazon_ses]` instead')
           @settings = ArMailerAWS.client_config[:amazon_ses] = ArMailerAWS.ses_options
