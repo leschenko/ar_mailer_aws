@@ -28,9 +28,10 @@ daemon_options.update(dir_mode: :normal, dir: options.pid_dir) if options.pid_di
 
 Daemons.run_proc(options.app_name || 'ar_mailer_aws', daemon_options) do
   # handle log files
+
   if defined? Rails
     ActiveRecord::Base.establish_connection
-    logger = ActiveSupport::BufferedLogger.new(Rails.root.join("log/#{Rails.env}.log"))
+    logger = Rails.logger.class.new(Rails.root.join("log/#{Rails.env}.log"))
     ActiveRecord::Base.logger = logger unless Rails.env.production?
     Rails.logger = ActionMailer::Base.logger = logger
   end
