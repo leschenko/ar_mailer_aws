@@ -1,13 +1,48 @@
 ### 0.1.0
 
-* enhancements
-  * add `cached_alt` and `cached_title` columns to Asset model.
-
-* deprecation
-  * Deprecated `Structure.with_scope` in favor of `Structure.with_type`
-
 * backwards incompatible changes
-  * Structure model: renamed `kind` column to `structure_type_id` and `position` renamed to `position_type_id`
-  * User model: removed `trust_state` column
-  * AdminComment model: renamed `author_id` to `user_id`, `author_name` to `user_name`, `user_id` to `resource_user_id`
-  * Devise: see `config.clean_up_csrf_token_on_authentication`, `config.secret_key` config options
+  * New configuration syntax:
+
+    # Your system wide Amazon config
+    AWS.config(
+        :access_key_id => 'YOUR_ACCESS_KEY_ID',
+        :secret_access_key => 'YOUR_SECRET_ACCESS_KEY'
+    )
+
+    ArMailerAWS.setup do |config|
+      # Current delivery method
+      config.client = :amazon_ses
+
+      # Delivery method client log i.e. smtp, amazon, mandrill
+      # config.client_logger = Logger.new('path/to/log/file')
+
+      # Configure your delivery method client
+      config.client_config = {
+          # Amazon SES config, system wide config will be used if not defined
+          # amazon_ses: {
+          #     access_key_id: 'YOUR_ACCESS_KEY_ID',
+          #     secret_access_key: 'YOUR_SECRET_ACCESS_KEY',
+          #     log_level: :debug
+          #     #region: 'eu-west-1',
+          # },
+
+          # Mandrill config
+          # mandrill: {
+          #     key: 'YOUR_MANDRILL_KEY'
+          # },
+
+          # Your smtp config, just like rails `smtp_settings`
+          # smtp: Rails.application.config.action_mailer.smtp_settings
+      }
+
+      # `ar_mailer_aws` logger i.e. mailer daemon
+      #config.logger = Logger.new('path/to/log/file')
+
+      # Error notification handler
+      #config.error_proc = lambda do |email, exception|
+      #  ExceptionNotifier.notify_exception(exception, data: {email: email.attributes})
+      #end
+
+      # batch email class
+      # email_class = 'BatchEmail'
+    end
