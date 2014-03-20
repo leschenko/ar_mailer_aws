@@ -19,5 +19,7 @@ tmp
 .idea
 .rvmrc
 .rspec
+.ruby-version
+.ruby-gemset
 unused
 TODO
