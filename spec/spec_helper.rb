@@ -12,6 +12,7 @@ ActiveRecord::Schema.define(:version => 1) do
     t.string :from
     t.string :to
     t.text :mail, limit: 16777215
+    t.integer :send_attempts_count, default: 0
     t.datetime :last_send_attempt_at
     t.datetime :created_at
   end
