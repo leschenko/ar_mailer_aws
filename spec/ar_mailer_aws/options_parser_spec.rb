@@ -9,6 +9,7 @@ describe ArMailerAWS::OptionsParser do
     options.quota.should == 10_000
     options.rate.should == 5
     options.max_age.should == 3600 * 24 * 7
+    options.max_attempts.should == 5
   end
 
   it 'batch_size' do
@@ -29,6 +30,10 @@ describe ArMailerAWS::OptionsParser do
 
   it 'max_age' do
     ArMailerAWS::OptionsParser.parse_options(%w(-m 300)).max_age.should == 300
+  end
+
+  it 'max_attempts' do
+    ArMailerAWS::OptionsParser.parse_options(%w(-a 10)).max_attempts.should == 10
   end
 
   it 'verbose' do

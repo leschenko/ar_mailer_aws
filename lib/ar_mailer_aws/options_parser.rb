@@ -24,6 +24,7 @@ module ArMailerAWS
         @options.quota = 10_000
         @options.rate = 5
         @options.max_age = 3600 * 24 * 7
+        @options.max_attempts = 5
 
         opts.banner = <<-TXT.strip_heredoc
           Usage: ar_mailer_aws <command> <options> -- <application options>
@@ -66,8 +67,16 @@ module ArMailerAWS
           @options.rate = rate
         end
 
+        opts.on('-a', '--max-attempts MAX_ATTEMPTS',
+                'Maximum attempts count for an email.',
+                'After this it will be removed from the queue.',
+                'Set to 0 to disable queue cleanup.',
+                "Default: #{@options.max_attempts}", Integer) do |max_attempts|
+          @options.max_attempts = max_attempts
+        end
+
         opts.on('-m', '--max-age MAX_AGE',
-                'Maxmimum age for an email. After this',
+                'Maximum age for an email. After this',
                 'it will be removed from the queue.',
                 'Set to 0 to disable queue cleanup.',
                 "Default: #{@options.max_age} seconds", Integer) do |max_age|
