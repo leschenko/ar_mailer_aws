@@ -39,11 +39,15 @@ module ArMailerAWS
       end
 
       def cleanup
-        return if options.max_age.to_i.zero?
-        timeout = Time.now - options.max_age
-        emails = @model.destroy_all(['last_send_attempt_at IS NOT NULL AND created_at < ?', timeout])
+        max_age = options.max_age.to_i
+        max_attempts = options.max_attempts.to_i
+        return if max_age.zero? && max_attempts.zero?
 
-        log "expired #{emails.length} emails"
+        scope = @model
+        scope = scope.where('last_send_attempt_at IS NOT NULL AND created_at < ?', Time.now - max_age) unless max_age.zero?
+        scope = scope.where('send_attempts_count > ?', max_attempts) unless max_attempts.zero?
+
+        log "expired #{scope.destroy_all.length} emails"
       end
 
       private
@@ -60,6 +64,7 @@ module ArMailerAWS
       def handle_email_error(e, email)
         log "ERROR sending email #{email.id} - #{email.inspect}: #{e.message}\n   #{e.backtrace.join("\n   ")}", :error
         ArMailerAWS.error_proc.call(email, e) if ArMailerAWS.error_proc
+        email.increment!(:send_attempts_count)
         email.update_column(:last_send_attempt_at, Time.now)
       end
 
