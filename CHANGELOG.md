@@ -1,6 +1,7 @@
 ### 0.1.0
 
 * backwards incompatible changes
+  * added `send_attempts_count` column
   * New configuration syntax:
     ```ruby
       # Your system wide Amazon config
