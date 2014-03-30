@@ -36,9 +36,9 @@ describe ArMailerAWS::Clients::Base do
     end
 
     describe '#cleanup' do
-      it 'do nothing if max_age == 0' do
-        @client = ArMailerAWS::Clients::Base.new(max_age: 0)
-        @client.model.should_not_receive(:destroy_all)
+      it 'do nothing if max_age zero and max_attempts zero' do
+        @client = ArMailerAWS::Clients::Base.new(max_age: 0, max_attempts: 0)
+        @client.model.should_not_receive(:where)
         @client.cleanup
       end
 
@@ -50,6 +50,14 @@ describe ArMailerAWS::Clients::Base do
         expect {
           @client.cleanup
         }.to change { @client.model.count }.from(4).to(2)
+      end
+
+      it 'remove emails with send_attempts_count greater then max_attempts' do
+        2.times { create_email }
+        2.times { create_email(send_attempts_count: 11) }
+
+        @client = ArMailerAWS::Clients::Base.new(max_attempts: 10)
+        expect { @client.cleanup }.to change { @client.model.count }.from(4).to(2)
       end
     end
 
