@@ -13,6 +13,15 @@ module ArMailerAWS
               begin
                 break if exceed_quota?
                 send_email(smtp, email)
+              rescue Net::SMTPFatalError => e
+                handle_email_error(e, email, email_error: true)
+                session.reset
+              rescue Net::SMTPServerBusy
+                log 'server too busy, stopping delivery cycle'
+                return
+              rescue Net::SMTPUnknownError, Net::SMTPSyntaxError, TimeoutError, Timeout::Error => e
+                handle_email_error(e, email, email_error: true)
+                session.reset
               rescue => e
                 handle_email_error(e, email)
               end
@@ -20,7 +29,7 @@ module ArMailerAWS
           end
         rescue => e
           log "ERROR in SMTP session: #{e.message}\n   #{e.backtrace.join("\n   ")}", :error
-          ArMailerAWS.error_proc.call(email, e) if ArMailerAWS.error_proc
+          ArMailerAWS.error_proc.call(nil, e) if ArMailerAWS.error_proc
         end
       end
 

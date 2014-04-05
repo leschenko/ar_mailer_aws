@@ -61,10 +61,10 @@ module ArMailerAWS
         end
       end
 
-      def handle_email_error(e, email)
+      def handle_email_error(e, email, options={})
         log "ERROR sending email #{email.id} - #{email.inspect}: #{e.message}\n   #{e.backtrace.join("\n   ")}", :error
         ArMailerAWS.error_proc.call(email, e) if ArMailerAWS.error_proc
-        email.increment!(:send_attempts_count)
+        email.increment!(:send_attempts_count) if options[:email_error]
         email.update_column(:last_send_attempt_at, Time.now)
       end
 

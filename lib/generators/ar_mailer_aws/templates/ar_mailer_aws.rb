@@ -35,7 +35,7 @@ ArMailerAWS.setup do |config|
 
   # Error notification handler
   #config.error_proc = lambda do |email, exception|
-  #  ExceptionNotifier.notify_exception(exception, data: {email: email.attributes})
+  #  ExceptionNotifier.notify_exception(exception, data: {email: email.try(:attributes)})
   #end
 
   # batch email class
