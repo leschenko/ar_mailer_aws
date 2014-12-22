@@ -4,23 +4,23 @@ describe ArMailerAWS::Mailer do
 
   it 'initializer email_class option' do
     mailer = ArMailerAWS::Mailer.new(email_class: CustomEmailClass)
-    mailer.email_class.name.should == 'CustomEmailClass'
+    expect(mailer.email_class.name).to eq 'CustomEmailClass'
   end
 
   context 'delivering' do
     before do
       @mail = double('Mail')
-      @mail.stub(:return_path).and_return('from@example.com')
-      @mail.stub(:destinations).and_return(['to@example.com'])
-      @mail.stub(:encoded).and_return('email content')
+      allow(@mail).to receive(:return_path).and_return('from@example.com')
+      allow(@mail).to receive(:destinations).and_return(['to@example.com'])
+      allow(@mail).to receive(:encoded).and_return('email content')
       @mailer = ArMailerAWS::Mailer.new
     end
 
     it '#check_params' do
       params = @mailer.send(:check_params, @mail)
-      params[0].should == 'from@example.com'
-      params[1].should == ['to@example.com']
-      params[2].should == 'email content'
+      expect(params[0]).to eq 'from@example.com'
+      expect(params[1]).to eq ['to@example.com']
+      expect(params[2]).to eq 'email content'
     end
 
     it 'store emails into db on deliver!' do

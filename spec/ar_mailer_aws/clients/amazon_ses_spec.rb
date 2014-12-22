@@ -8,7 +8,7 @@ describe ArMailerAWS::Clients::AmazonSES do
 
   it 'supply ses options to AWS::SimpleEmailService initializer' do
     ArMailerAWS.client_config = {amazon_ses: {a: 1}}
-    AWS::SimpleEmailService.should_receive(:new).with({a: 1})
+    expect(AWS::SimpleEmailService).to receive(:new).with({a: 1})
     ArMailerAWS::Clients::AmazonSES.new
   end
 
@@ -20,14 +20,14 @@ describe ArMailerAWS::Clients::AmazonSES do
     describe '#send_emails' do
       before do
         @client = ArMailerAWS::Clients::AmazonSES.new(quota: 100)
-        @client.service.stub(:send_raw_email)
-        @client.service.stub(:quotas).and_return({sent_last_24_hours: 0})
+        allow(@client.service).to receive(:send_raw_email)
+        allow(@client.service).to receive(:quotas).and_return({sent_last_24_hours: 0})
       end
 
       context 'success' do
         it 'send email via ses' do
           2.times { create_email }
-          @client.service.should_receive(:send_raw_email).twice
+          expect(@client.service).to receive(:send_raw_email).twice
           @client.send_emails(@client.model.all)
         end
 
@@ -44,17 +44,17 @@ describe ArMailerAWS::Clients::AmazonSES do
           email = create_email
           exception = StandardError.new
           ArMailerAWS.error_proc = proc {}
-          ArMailerAWS.error_proc.should_receive(:call).with(email, exception)
-          @client.service.should_receive(:send_raw_email).and_raise(exception)
+          expect(ArMailerAWS.error_proc).to receive(:call).with(email, exception)
+          expect(@client.service).to receive(:send_raw_email).and_raise(exception)
           @client.send_emails([email])
         end
 
         it 'update last_send_attempt_at column' do
           email = create_email
           exception = StandardError.new
-          @client.service.should_receive(:send_raw_email).and_raise(exception)
+          expect(@client.service).to receive(:send_raw_email).and_raise(exception)
           @client.send_emails([email])
-          email.reload.last_send_attempt_at.should_not be_nil
+          expect(email.reload.last_send_attempt_at).not_to be_nil
         end
       end
 
@@ -62,7 +62,7 @@ describe ArMailerAWS::Clients::AmazonSES do
         it 'call not more the rate times per second' do
           5.times { create_email }
           @client.options.rate = 2
-          @client.service.should_receive(:send_raw_email).twice
+          expect(@client.service).to receive(:send_raw_email).twice
           begin
             Timeout::timeout(1) do
               @client.send_emails(@client.model.all)
@@ -83,7 +83,7 @@ describe ArMailerAWS::Clients::AmazonSES do
 
         it 'consider sent_last_24_hours from ses' do
           10.times { create_email }
-          @client.service.stub(:quotas).and_return({sent_last_24_hours: 10})
+          allow(@client.service).to receive(:quotas).and_return({sent_last_24_hours: 10})
           @client.options.quota = 15
           expect {
             @client.send_emails(@client.model.all)

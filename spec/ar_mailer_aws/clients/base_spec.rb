@@ -8,11 +8,11 @@ describe ArMailerAWS::Clients::Base do
 
   it 'convert Hash options to OpenStruct' do
     client = ArMailerAWS::Clients::Base.new
-    client.options.class.name.should == 'OpenStruct'
+    expect(client.options.class.name).to eq 'OpenStruct'
   end
 
   it 'get default emails model' do
-    ArMailerAWS::Clients::Base.new.model.name.should == 'BatchEmail'
+    expect(ArMailerAWS::Clients::Base.new.model.name).to eq 'BatchEmail'
   end
 
   context 'sending' do
@@ -24,21 +24,21 @@ describe ArMailerAWS::Clients::Base do
       it 'batch_size emails' do
         5.times { create_email }
         @client = ArMailerAWS::Clients::Base.new(batch_size: 3)
-        @client.find_emails.should have(3).emails
+        expect(@client.find_emails.length).to eq 3
       end
 
       it 'ignore emails last_send_attempt_at < 300 seconds ago' do
         2.times { create_email }
         2.times { create_email(last_send_attempt_at: Time.now - 100) }
         @client = ArMailerAWS::Clients::Base.new(batch_size: 3)
-        @client.find_emails.should have(2).emails
+        expect(@client.find_emails.length).to eq 2
       end
     end
 
     describe '#cleanup' do
       it 'do nothing if max_age zero and max_attempts zero' do
         @client = ArMailerAWS::Clients::Base.new(max_age: 0, max_attempts: 0)
-        @client.model.should_not_receive(:where)
+        expect(@client.model).not_to receive(:where)
         @client.cleanup
       end
 
@@ -70,19 +70,19 @@ describe ArMailerAWS::Clients::Base do
     describe '#send_batch' do
       before do
         @client = ArMailerAWS::Clients::Base.new
-        @client.stub(:send_emails)
+        allow(@client).to receive(:send_emails)
       end
 
       it 'no pending emails' do
-        @client.should_receive(:cleanup)
-        @client.should_receive(:find_emails).and_return([])
-        @client.should_not_receive(:send_emails)
+        expect(@client).to receive(:cleanup)
+        expect(@client).to receive(:find_emails).and_return([])
+        expect(@client).not_to receive(:send_emails)
         @client.send_batch
       end
 
       it 'no pending emails' do
-        @client.should_receive(:find_emails).and_return([create_email])
-        @client.should_receive(:send_emails)
+        expect(@client).to receive(:find_emails).and_return([create_email])
+        expect(@client).to receive(:send_emails)
         @client.send_batch
       end
     end
