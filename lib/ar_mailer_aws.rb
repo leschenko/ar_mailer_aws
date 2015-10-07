@@ -3,10 +3,10 @@ require 'ar_mailer_aws/options_parser'
 require 'ar_mailer_aws/clients/base'
 require 'ar_mailer_aws/mailer'
 require 'ar_mailer_aws/railtie' if defined? Rails
+require 'active_support'
 require 'active_support/core_ext'
 
 module ArMailerAWS
-
   # ActiveRecord class for storing emails
   mattr_accessor :email_class
   @@email_class = 'BatchEmail'
@@ -66,6 +66,5 @@ module ArMailerAWS
         available_clients[client_config.keys.first].try(:constantize)
       end
     end
-
   end
 end
